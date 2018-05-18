@@ -17,18 +17,18 @@
 
 [//]: # (Image References)
 
-[image1]: /images/robot_schematic.jpg
-[image2]: /images/dh_vs_urdf.jpg
-[image3]: /images/dh_table.jpg
-[image4]: /images/PandP1.png
-[image5]: /images/PandP2.png
-[image6]: /images/dh-transform.png
-[image7]: /images/dh-transform-matrix.png
-[image8]: /images/eq3.png
-[image9]: /images/homo_xform-2.png
-[image10]: /images/wc_equations.png
-[image11]: /images/l21-l-inverse-kinematics-new-design-fixed.jpg
-[image12]: /images/schematic_calc_thetas.jpg
+[image1]: ./images/robot_schematic.jpg
+[image2]: ./images/dh_vs_urdf.jpg
+[image3]: ./images/dh_table.jpg
+[image4]: ./images/PandP1.png
+[image5]: ./images/PandP2.png
+[image6]: ./images/dh-transform.png
+[image7]: ./images/dh-transform-matrix.png
+[image8]: ./images/eq3.png
+[image9]: ./images/homo_xform-2.png
+[image10]: ./images/wc_equations.png
+[image11]: ./images/l21-l-inverse-kinematics-new-design-fixed.jpg
+[image12]: ./images/schematic_calc_thetas.jpg
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/972/view) Points
 ### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
