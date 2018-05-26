@@ -31,8 +31,8 @@
 [image4]: ./images/pt_filtered_env.png
 [image5]: ./images/table_ex_env.png
 [image6]: ./images/objects_ex_env.png
-[image7]: ./images/objects_ex_env.png
-[image8]: ./images/euclidian_d.png
+[image7]: ./images/euclidian_d.png
+[image8]: ./images/clusters_env.png
 [image9]: ./images/rgb_hist.png
 [image10]: ./images/hsv_hist.png
 [image11]: ./images/m1_final.png
