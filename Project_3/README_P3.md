@@ -76,7 +76,7 @@ Axis | Min Value | Max Value
 --- | --- | --- 
 Z | 0.61 | 1.1 
 Y | -0.4 | 0.4
-Z | 0.35 | 0.9 
+X | 0.35 | 0.9 
 
 The Y axis filter was important as the dropboxes was with in the view of the camera, and got wrongly recognized as an object of interest before filtering it out. The result from this filter stage is illustrated in the screenshot from Rviz below. 
 
