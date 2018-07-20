@@ -16,7 +16,7 @@ Make a brief writeup report summarizing why you made the choices you did in buil
 
 [//]: # (Image References)
 
-[image1]: ./images/follow-meproject.png
+[image1]: ./images/follow-me-project.png
 
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/1155/view) Points
