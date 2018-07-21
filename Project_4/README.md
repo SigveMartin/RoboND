@@ -29,6 +29,9 @@
 [image11]: ./images/1x1_conv2d_batch.png
 [image12]: ./images/fcn_model.png
 [image13]: ./images/training_graph.png
+[image14]: ./images/following_target.png
+[image15]: ./images/patrol_without_target.png
+[image16]: ./images/patrol_with_target.png
 
 The submission includes 
 
@@ -160,15 +163,64 @@ Bounding box network architectures could also be used on some cases to identify 
 
 ### Project Results and Possible Improvements 
 
+#### Project Results 
+
 The network get scored by two types of errors. The intersection over union for the pixelwise classification and a measure to determine if the network is able to detect the person or not. If more then 3 pixels have probability greater then 0.5 of being the target person then this counts as the network guessing the target is in the image. It also checks if the target is actually in the image, by checking that there are more then 3 pixels containing the target in the label mask. This again is used count the true_positives, false positives, false negatives of the detection. 
 
 The final resulting score is calculated as the pixelwise; 
 
 > average_IoU*(n_true_positive/(n_true_positive+n_false_positive+n_false_negative))
 
-more data **** 
 
-One tactic to improve the network would be to build a deeper network with eg. one additional encoder and decoder layer, with filters going as deep as 128 in the 1x1 layer, i.e. encoder 16-32-64, 128 1x1, decoder 64-32-16. This would be worth trying, especially if used on more training data. Then dropout could be added to reduce overfitting. 
+It was captured images of three scenarios; 1) when the drone was behind the target person, 2) when the drone was out on patrol without target, and 3) when the drone was on patrol with target. 
+
+For the first scenario the network scored fairly good on both measures; 
+
+> number of validation samples intersection over the union evaulated on 542
+> average intersection over union for background is 0.9944328682908001
+> average intersection over union for other people is 0.3064691328128149
+> average intersection over union for the hero is 0.8978339702466568
+> number true positives: 539, number false positives: 0, number false negatives: 0
+
+This is also illustrated by the image below. From sample data of the scenario where the drone is following the target person, and you see the "real life picture" to the left, the target picture in the midle, and finaly the result from the network to the right. 
+
+![Screenshot of the follow target example images from the notebook, project deliverable][image14] 
+
+For the second scenario the network performed a bit worse, falsely identifying the hero 136 times, however intersection over union for the hero was 0.0 which is good as the hero was not in the images; 
+
+> number of validation samples intersection over the union evaulated on 270
+> average intersection over union for background is 0.9846801941406704
+> average intersection over union for other people is 0.6556936091110968
+> average intersection over union for the hero is 0.0
+> number true positives: 0, number false positives: 136, number false negatives: 0
+
+Notice that there was less samples evaluated for this scenario than the first one (542 vs. 270). So might prioritize this scenario if we proceede to add more data. The sample images of the second scenario is presented below. 
+
+![Screenshot of the patrol without target in sceen example images from the notebook, project deliverable][image15] 
+
+The third scenario evaluated a bit more data than the second, but still less than the first scenario (322); 
+
+> number of validation samples intersection over the union evaulated on 322
+> average intersection over union for background is 0.9959029081930075
+> average intersection over union for other people is 0.40201606407729795
+> average intersection over union for the hero is 0.2524588525348087
+> number true positives: 159, number false positives: 5, number false negatives: 142
+
+This scenario measure how well the network is able to detect the hero from far away, doing patrol with hero in sceen. As the measure show, it has less ability to classify the hero correctly as sceen both from the IOU score for hero of 0.25 and some false positives and a fairly high amount of false negatives. This is also illustrated by the images below, where you see that the hero is classified both as "other people" (green) and "the hero" (blue), when you compare to the labeled output in the middle. 
+
+![Screenshot of the patrol with target in sceen example images from the notebook, project deliverable][image16] 
+
+Quite a few pixels is miss classified in these images, underpinning the poorer score compared to the first scenario where there is no visible green pixels on the hero (supported by no false positives or false negatives). 
+
+All in all the final resulting measure of the networks accuracy is 0.40922751799259066. Barely above the passing threshold of 40%. However, due to time limitations this would need to suffice for this hand-in. 
+
+#### Posible improvements 
+
+As mentioned earlier, one major improvement would be to add more training data. I only used the training data that was provided by Udacity. Generating more data in general, but especially focusing on scenario 2 and 3. 
+
+Another tactic to improve the network would be to build a deeper network with eg. one additional encoder and decoder layer, with filters going as deep as 128 in the 1x1 layer, i.e. encoder 16-32-64, 128 1x1, decoder 64-32-16. This would be worth trying, especially if used on more training data. Then dropout could be added to reduce overfitting. 
+
+The hyper parameters could also be improved, as mentioned above. In addition they would need to be adjusted anyways when adding more layers to the model. 
 
 
 
