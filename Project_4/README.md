@@ -28,6 +28,7 @@
 [image10]: ./images/decoder_block.png 
 [image11]: ./images/1x1_conv2d_batch.png
 [image12]: ./images/fcn_model.png
+[image13]: ./images/training_graph.png
 
 The submission includes 
 
@@ -111,11 +112,6 @@ All in all this resulted in a FCN_Model as illustrated by the image below.
 
 I started out with two encoder and decoder blocks. Each layer increases the networks ability to capture more complex shapes in the images, however it also increases the chance of overfitting the data. I played around with different values in the filters, but ended up with 16 and 32 for encoder and decoder and the 64 sized 1x1 convolution between. I think this serves well to pick up the features of the person in the images and found the architecture to be a good basis for tuning the hyper parameters so that network accuracy over 40%. 
 
-#### Maybe as sub sections of architecture
-
-* various uses of encoding/decoding images - when it should be used, when its useful, and any problems that may arise. 
-* The student is able to clearly articulate whether this model and data would work well for following another object (dog, cat, car, etc.) instead of a human and if not, what changes would be required.
-
 ### Tuning of hyper parameters 
 
 The hyper parameters for this network is defined as; 
@@ -126,13 +122,29 @@ The hyper parameters for this network is defined as;
 * **validation_steps:** number of batches of validation images that go through the network in 1 epoch. This is similar to steps_per_epoch, except validation_steps is for the validation dataset. We have provided you with a default value for this as well.
 * **workers:** maximum number of processes to spin up. This can affect your training speed and is dependent on your hardware. We have provided a recommended value to work with.
 
+I initially started with the same parameters as in the segmentation lab exersice; 
 
-	* Epoch
-	* Learning Rate
-	* Batch Size
+* learning_rate = 0.005
+* batch_size = 128
+* num_epochs = 10
+* steps_per_epoch = 35
+* validation_steps = 50
+* workers = 2
 
-	Etc.
-	All configurable parameters should be explicitly stated and justified.
+This resulted in a final score of only ~ 4%. Both the traning loss and the validation loss was quite high, and from the graphs it seemed to reduce quickly and be occilating a bit. It also increased at the end, which I interpreted as learning rate being too high. However, not overfitting (validation loss < training loss). 
+
+Next I tried to lower the learning rate, effectively slowing down the learning process and get smoother convergance. At the same time I decresed the batch size and increased the epochs. I did a couple of iterations ending up with the following setup that (barely) provided a passing final resulting accuracy. 
+
+* learning_rate = 0.0035
+* batch_size = 80
+* num_epochs = 40
+* steps_per_epoch = 50
+* validation_steps = 50
+* workers = 2
+
+Reviewing the training curves we see the training loss is below the validation loss, but not with a huge difference (loss: 0.0224 - val_loss: 0.0326). It is occilating a bit, and validation loss seems to increase a bit on the end. One could try with a lower learning rate, of eg. 0.003 to get smoother convergence. Also, increasing number of epochs to eg. 50 could improve the result as it might continue converging to a lower traing and validation loss. However, this would require a long training time on my local set-up. Might be usefull to test increasing the number of workers in order to speed up training. However, as this model passed 40% final result, I choose to hand in at this stage, as I'm already late :-D 
+
+![Screenshot from the last training curves of the notebook, project deliverable][image13] 
 
 ### Notes on Neural Networks - Applicability and Limitations 
 
@@ -148,7 +160,13 @@ Bounding box network architectures could also be used on some cases to identify 
 
 ### Project Results and Possible Improvements 
 
-More data 
+The network get scored by two types of errors. The intersection over union for the pixelwise classification and a measure to determine if the network is able to detect the person or not. If more then 3 pixels have probability greater then 0.5 of being the target person then this counts as the network guessing the target is in the image. It also checks if the target is actually in the image, by checking that there are more then 3 pixels containing the target in the label mask. This again is used count the true_positives, false positives, false negatives of the detection. 
+
+The final resulting score is calculated as the pixelwise; 
+
+> average_IoU*(n_true_positive/(n_true_positive+n_false_positive+n_false_negative))
+
+more data **** 
 
 One tactic to improve the network would be to build a deeper network with eg. one additional encoder and decoder layer, with filters going as deep as 128 in the 1x1 layer, i.e. encoder 16-32-64, 128 1x1, decoder 64-32-16. This would be worth trying, especially if used on more training data. Then dropout could be added to reduce overfitting. 
 
