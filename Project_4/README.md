@@ -61,7 +61,7 @@ The network we have built for this project is called a Segmentation Network, whi
 
 ![Screen Shot of FCN architecture, Lesson 32: Fully Convolutional Networks, Udacity][image2]
 
-The goal of the Encoder is to extract features of the image, whereas the goal of the decoder is to upscale the output from the encoder to the same size as the original imagem resulting in a segmentation or prediction of each individual pixel of the original image. 
+The goal of the Encoder is to extract features of the image, whereas the goal of the decoder is to upscale the output from the encoder to the same size as the original image resulting in a segmentation or prediction of each individual pixel of the original image. 
 
 Wheras a typical Convolutional Neural Networks might consist of a series of convolutional layers feeding into a fully connected layer (FCL), enabling classification tasks like "is this a person" (2D tensor), we want to find out where in the image the person is (4D tensor). That is why we need to replace the FCL with a 1x1 convolutional layer, as the fully connected layer does not preserve spatial information. So by inserting a 1x1 convolutional layer instead of the FCL we are able to preserve spatial inforamtion throughout the whole network, enabling it to find the person and decode where it is in the image. 
 
@@ -70,7 +70,7 @@ The replacement of the FCL is one of three special teqniues that the FCNs adopt.
 
 ![Image of 1x1 Convolutions, Lesson 32.4, Udacity][image3]
 
-The other teqniques FCN adopt are upsampling through transpose convolutional layers, which is part of the architecture of the decoder where essentially a reverse convolution where the forward and backwards passes are swapped, as illustrated by the image below. You'll see this applied in the code through BilinearUpSampling2D. 
+The other teqniques FCN adopt are upsampling through transpose convolutional layers, which is part of the architecture of the decoder where essentially a reverse convolution, where the forward and backwards passes are swapped, as illustrated by the image below. You'll see upsampling being applied in the code through BilinearUpSampling2D. 
 
 ![Screenshot from video, Lesson 32.3, Udacity][image4]
 
@@ -78,7 +78,7 @@ The third technique is skipped connections, which allows the network to use info
 
 ![Screenshot from video, Lesson 32.3, Udacity][image5] 
 
-It is implemented in the decoder_block by taking a larger layer and the smaller_layer as inputs where it is concatenated after the upsampling step. It is implemented in the fcn_model by using output_layer1 as the larger layer of output_layer4 of and the inputs as the larger layer of output_layer5 of the decoder. Thus feeding information from larger resolutions of images from the encoder step, as illustrated by the image below. 
+It is implemented in the decoder_block by taking a larger layer and the smaller_layer as inputs where it is concatenated after the upsampling step. It is implemented in the fcn_model by using output_layer1 as the larger layer of output_layer4 and the inputs as the larger layer of output_layer5 of the decoder. Thus feeding information from larger resolutions of images from the encoder step, as illustrated by the image below. 
 
 ![Screenshot from video, Lesson 32.10, Udacity][image6] 
 
@@ -86,7 +86,7 @@ The neural network implemented provides sceen understanding through "semantic se
 
 ![Screenshot from video, Lesson 33.3, Udacity][image7] 
 
-Which in our case enables the drone to learn where the target person in an image stream is, as illustrated in the image below. 
+Which in our case enables the drone to learn where the target person in an image is, as illustrated in the image below. 
 
 ![Screenshot from video, Lesson 33.5, Udacity][image8] 
 
@@ -114,6 +114,8 @@ All in all this resulted in a FCN_Model as illustrated by the image below.
 ![Screenshot from the FCN_Model function part of the notebook, project deliverable][image12] 
 
 I started out with two encoder and decoder blocks. Each layer increases the networks ability to capture more complex shapes in the images, however it also increases the chance of overfitting the data. I played around with different values in the filters, but ended up with 16 and 32 for encoder and decoder and the 64 sized 1x1 convolution between. I think this serves well to pick up the features of the person in the images and found the architecture to be a good basis for tuning the hyper parameters so that network accuracy over 40%. 
+
+A note on the concatenation step is that, while it is good for concatenating images of different sizes, I realized that it errors out if you feed it layers with both different image size and debt. Reviewing the [keras documentation](https://keras.io/layers/merge/#concatenate) it states that it can only concatenate along one axis/dimension. In our case it means we need to feed it the same image size, since we want to concatenate on the debt. This was part of choosing which layer to skipp, by feeding into the decoder block. 
 
 ### Tuning of hyper parameters 
 
@@ -149,7 +151,7 @@ Reviewing the training curves we see the training loss is below the validation l
 
 ![Screenshot from the last training curves of the notebook, project deliverable][image13] 
 
-### Notes on Neural Networks - Applicability and Limitations 
+### Notes on Neural Networks Applicability and Limitations 
 
 FCN models are good at sceen understanding, more than merely detecting if an object is in an image or not. If the task at hand is to classify correctly objects in sceen a semantic segmentation might not be needed. In such case you could perform the task by applying a convolutional network with a fully connected layer leading up to a soft max function. However, if you need deeper understanding - or understanding of deeper dimmensions of the image - then semantic segmentation, as applied in this project would be relevant. 
 
@@ -176,11 +178,11 @@ It was captured images of three scenarios; 1) when the drone was behind the targ
 
 For the first scenario the network scored fairly good on both measures; 
 
-> number of validation samples intersection over the union evaulated on 542
-> average intersection over union for background is 0.9944328682908001
-> average intersection over union for other people is 0.3064691328128149
-> average intersection over union for the hero is 0.8978339702466568
-> number true positives: 539, number false positives: 0, number false negatives: 0
+> * number of validation samples intersection over the union evaulated on 542
+> * average intersection over union for background is 0.9944328682908001
+> * average intersection over union for other people is 0.3064691328128149
+> * average intersection over union for the hero is 0.8978339702466568
+> * number true positives: 539, number false positives: 0, number false negatives: 0
 
 This is also illustrated by the image below. From sample data of the scenario where the drone is following the target person, and you see the "real life picture" to the left, the target picture in the midle, and finaly the result from the network to the right. 
 
@@ -188,11 +190,11 @@ This is also illustrated by the image below. From sample data of the scenario wh
 
 For the second scenario the network performed a bit worse, falsely identifying the hero 136 times, however intersection over union for the hero was 0.0 which is good as the hero was not in the images; 
 
-> number of validation samples intersection over the union evaulated on 270
-> average intersection over union for background is 0.9846801941406704
-> average intersection over union for other people is 0.6556936091110968
-> average intersection over union for the hero is 0.0
-> number true positives: 0, number false positives: 136, number false negatives: 0
+> * number of validation samples intersection over the union evaulated on 270
+> * average intersection over union for background is 0.9846801941406704
+> * average intersection over union for other people is 0.6556936091110968
+> * average intersection over union for the hero is 0.0
+> * number true positives: 0, number false positives: 136, number false negatives: 0
 
 Notice that there was less samples evaluated for this scenario than the first one (542 vs. 270). So might prioritize this scenario if we proceede to add more data. The sample images of the second scenario is presented below. 
 
@@ -200,11 +202,11 @@ Notice that there was less samples evaluated for this scenario than the first on
 
 The third scenario evaluated a bit more data than the second, but still less than the first scenario (322); 
 
-> number of validation samples intersection over the union evaulated on 322
-> average intersection over union for background is 0.9959029081930075
-> average intersection over union for other people is 0.40201606407729795
-> average intersection over union for the hero is 0.2524588525348087
-> number true positives: 159, number false positives: 5, number false negatives: 142
+> * number of validation samples intersection over the union evaulated on 322
+> * average intersection over union for background is 0.9959029081930075
+> * average intersection over union for other people is 0.40201606407729795
+> * average intersection over union for the hero is 0.2524588525348087
+> * number true positives: 159, number false positives: 5, number false negatives: 142
 
 This scenario measure how well the network is able to detect the hero from far away, doing patrol with hero in sceen. As the measure show, it has less ability to classify the hero correctly as sceen both from the IOU score for hero of 0.25 and some false positives and a fairly high amount of false negatives. This is also illustrated by the images below, where you see that the hero is classified both as "other people" (green) and "the hero" (blue), when you compare to the labeled output in the middle. 
 
