@@ -116,11 +116,11 @@ I started out with two encoder and decoder blocks. Each layer increases the netw
 
 The hyper parameters for this network is defined as; 
 
-* **batch_size:** number of training samples/images that get propagated through the network in a single pass.
-* **num_epochs:** number of times the entire training dataset gets propagated through the network.
-* **steps_per_epoch:** number of batches of training images that go through the network in 1 epoch. We have provided you with a default value. One recommended value to try would be based on the total number of images in training dataset divided by the batch_size.
-* **validation_steps:** number of batches of validation images that go through the network in 1 epoch. This is similar to steps_per_epoch, except validation_steps is for the validation dataset. We have provided you with a default value for this as well.
-* **workers:** maximum number of processes to spin up. This can affect your training speed and is dependent on your hardware. We have provided a recommended value to work with.
+> * **batch_size:** number of training samples/images that get propagated through the network in a single pass.
+> * **num_epochs:** number of times the entire training dataset gets propagated through the network.
+> * **steps_per_epoch:** number of batches of training images that go through the network in 1 epoch. We have provided you with a default value. One recommended value to try would be based on the total number of images in training dataset divided by the batch_size.
+> * **validation_steps:** number of batches of validation images that go through the network in 1 epoch. This is similar to steps_per_epoch, except validation_steps is for the validation dataset. We have provided you with a default value for this as well.
+> * **workers:** maximum number of processes to spin up. This can affect your training speed and is dependent on your hardware. We have provided a recommended value to work with.
 
 I initially started with the same parameters as in the segmentation lab exersice; 
 
